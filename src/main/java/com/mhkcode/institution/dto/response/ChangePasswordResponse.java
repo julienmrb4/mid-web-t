@@ -5,9 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LoginResponse {
+public class ChangePasswordResponse {
     private String message;
-    private String token;
     private String responseStatus;
-    private String role;
+
 }
