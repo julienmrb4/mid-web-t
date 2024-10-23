@@ -15,6 +15,7 @@ RegistrationResponse addUser(RegistrationRequest request);
 LoginResponse login(LoginRequest request);
 ChangePasswordResponse changePassword(ChangePasswordRequest request);
 User getById(Long id);
+User findByEmail(String email);
 List<User>allUsers();
 RegistrationResponse updateUser(RegistrationRequest request);
 void deleteUser(String email);

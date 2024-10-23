@@ -39,7 +39,7 @@ public class UserController {
     public String registerUser(@ModelAttribute RegistrationRequest request, Model model) {
         var response = userService.addUser(request);
         if ("201".equals(response.getResponseStatus())) {
-            return "redirect:/login?registered=true";
+            return "redirect:/admin-dashboard";
         } else {
             model.addAttribute("error", response.getMessage());
             return "register";
@@ -149,4 +149,6 @@ public class UserController {
         model.addAttribute("error", response.getMessage());
         return "change-password";
     }
+
+
 }
