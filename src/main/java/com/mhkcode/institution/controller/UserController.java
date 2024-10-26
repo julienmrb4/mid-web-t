@@ -153,5 +153,21 @@ public class UserController {
         return "change-password";
     }
 
+    @GetMapping("/forgot-password")
+    public String showResetPasswordForm(Model model) {
+        model.addAttribute("changePasswordRequest", new ChangePasswordRequest());
+        return "forgot-password";
+    }
+
+    @PostMapping("/reset-password")
+    public String resetPassword(@ModelAttribute ChangePasswordRequest request, Model model) {
+        var response = userService.resetPassword(request);
+        if ("200".equals(response.getResponseStatus())) {
+            return "redirect:/dashboard?success=Password+changed";
+        }
+        model.addAttribute("error", response.getMessage());
+        return "change-password";
+    }
+
 
 }

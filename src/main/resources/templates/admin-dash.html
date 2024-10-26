@@ -161,57 +161,7 @@
                 </div>
             </div>
 
-            <!-- Users Table -->
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Users List</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Actions</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="user : ${users}">
-                                <td th:text="${user.userId}">1</td>
-                                <td th:text="${user.firstname + ' ' + user.lastname}">John Doe</td>
-                                <td th:text="${user.email}">john@example.com</td>
-                                <td th:text="${user.role}">USER</td>
-                                <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                            Actions
-                                        </button>
-                                        <ul class="dropdown-menu">
-                                            <li>
-                                                <a class="dropdown-item" th:href="@{/users/edit/{id}(id=${user.userId})}">
-                                                    <i class="fas fa-edit me-2"></i>Update
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <form th:action="@{/users/delete/{email}(email=${user.email})}" method="post" class="dropdown-item">
-                                                    <button type="submit" class="btn btn-link text-danger p-0"
-                                                            onclick="return confirm('Are you sure you want to delete this user?')">
-                                                        <i class="fas fa-trash-alt me-2"></i>Delete
-                                                    </button>
-                                                </form>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+
         </div>
     </div>
 </div>

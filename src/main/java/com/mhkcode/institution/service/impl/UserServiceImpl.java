@@ -8,6 +8,7 @@ import com.mhkcode.institution.dto.response.LoginResponse;
 import com.mhkcode.institution.dto.response.RegistrationResponse;
 import com.mhkcode.institution.model.User;
 import com.mhkcode.institution.repository.UserRepository;
+import com.mhkcode.institution.service.EmailService;
 import com.mhkcode.institution.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public RegistrationResponse addUser(RegistrationRequest request) {
@@ -140,6 +143,43 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public ChangePasswordResponse resetPassword(ChangePasswordRequest request) {
+        logger.info("Processing password change for user: {}", request.getEmail());
+        ChangePasswordResponse response = new ChangePasswordResponse();
+        String newPassword = "12345";  // You may want to generate a random password here for better security.
+
+        try {
+            User user = userRepository.findByEmail(request.getEmail());
+
+            if (user == null) {
+                response.setResponseStatus("400");
+                response.setMessage("User not found. Bad email.");
+                return response;
+            }
+
+            // Update password
+            user.setPassword(newPassword);
+            userRepository.save(user);
+
+            // Send email with new password
+            String subject = "Password Reset Confirmation";
+            String body = "Dear " + user.getFirstname() + ",\n\nYour password has been reset successfully. " +
+                    "Your new password is: " + newPassword + "\n\nPlease log in and change this password.";
+            emailService.sendEmail(user.getEmail(), subject, body);
+
+            response.setResponseStatus("200");
+            response.setMessage("Your new password has been sent to your email.");
+
+        } catch (Exception e) {
+            logger.error("Error during password reset: {}", e.getMessage());
+            response.setResponseStatus("500");
+            response.setMessage("Failed to reset password. Please try again.");
+        }
+
+        return response;
+    }
+
+    @Override
     public User getById(Long id) {
         logger.info("Fetching user by ID: {}", id);
         User user = userRepository.findByUserId(id);
@@ -209,6 +249,12 @@ public class UserServiceImpl implements UserService {
             logger.error("Error deleting user: {}", e.getMessage());
             throw new RuntimeException("Failed to delete user");
         }
+    }
+
+    @Override
+    public User setProfile(User userData,String profile) {
+       userData.setProfilePicture(profile);
+       return userRepository.save(userData);
     }
 
 }

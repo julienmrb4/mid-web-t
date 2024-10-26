@@ -14,10 +14,12 @@ public interface UserService {
 RegistrationResponse addUser(RegistrationRequest request);
 LoginResponse login(LoginRequest request);
 ChangePasswordResponse changePassword(ChangePasswordRequest request);
+    ChangePasswordResponse resetPassword(ChangePasswordRequest request);
 User getById(Long id);
 User findByEmail(String email);
 List<User>allUsers();
 RegistrationResponse updateUser(RegistrationRequest request);
 void deleteUser(Long userId);
+User setProfile(User user,String profile);
 
 }
