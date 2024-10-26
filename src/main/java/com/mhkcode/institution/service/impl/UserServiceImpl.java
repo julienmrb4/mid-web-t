@@ -111,8 +111,8 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findByEmail(request.getEmail());
 
             if (user == null) {
-                response.setResponseStatus("404");
-                response.setMessage("User not found");
+                response.setResponseStatus("400");
+                response.setMessage("User not found bad email");
                 return response;
             }
 
@@ -165,7 +165,7 @@ public class UserServiceImpl implements UserService {
         RegistrationResponse response = new RegistrationResponse();
 
         try {
-            User existingUser = userRepository.findByEmail(request.getEmail());
+            User existingUser = userRepository.findByUserId(request.getUserId());
             if (existingUser == null) {
                 response.setResponseStatus("404");
                 response.setMessage("User not found");
@@ -178,6 +178,7 @@ public class UserServiceImpl implements UserService {
             existingUser.setLastname(request.getLastname());
             existingUser.setDob(request.getDob());
             existingUser.setPhoneNumber(request.getPhoneNumber());
+            existingUser.setRole(request.getRole());
 
             userRepository.save(existingUser);
 
@@ -194,15 +195,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(String email) {
-        logger.info("Deleting user with email: {}", email);
+    public void deleteUser(Long id) {
+        logger.info("Deleting user with email: {}", id);
         try {
-            User user = userRepository.findByEmail(email);
+            User user = userRepository.findByUserId(id);
             if (user != null) {
                 userRepository.delete(user);
-                logger.info("User deleted successfully: {}", email);
+                logger.info("User deleted successfully: {}", id);
             } else {
-                logger.warn("No user found with email: {}", email);
+                logger.warn("No user found with email: {}", id);
             }
         } catch (Exception e) {
             logger.error("Error deleting user: {}", e.getMessage());

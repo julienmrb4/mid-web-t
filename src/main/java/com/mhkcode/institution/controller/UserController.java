@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -107,30 +108,32 @@ public class UserController {
         return "redirect:/users?error=User+not+found";
     }
 
-    @GetMapping("/users/edit/{id}")
+    @GetMapping("/users/update/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         User user = userService.getById(id);
         if (user != null) {
             model.addAttribute("user", user);
-            return "edit-user";
+            return "update-user";
         }
         return "redirect:/users?error=User+not+found";
     }
 
-    @PostMapping("/users/update")
-    public String updateUser(@ModelAttribute RegistrationRequest request, Model model) {
+    @PostMapping("/users/update/{userId}")
+    public String updateUser(@PathVariable Long userId, @ModelAttribute RegistrationRequest request, RedirectAttributes redirectAttributes) {
         var response = userService.updateUser(request);
         if ("200".equals(response.getResponseStatus())) {
-            return "redirect:/users?success=User+updated";
+            redirectAttributes.addFlashAttribute("success", "User updated successfully");
+            return "redirect:/users";
         }
-        model.addAttribute("error", response.getMessage());
-        return "edit-user";
+        redirectAttributes.addFlashAttribute("error", response.getMessage());
+        return "redirect:/users/update/" + userId;
     }
 
-    @PostMapping("/users/delete/{email}")
-    public String deleteUser(@PathVariable String email) {
-        userService.deleteUser(email);
-        return "redirect:/users?success=User+deleted";
+    @PostMapping("/users/delete/{id}")
+    public String deleteUser(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        userService.deleteUser(id);
+        redirectAttributes.addFlashAttribute("success", "User deleted successfully");
+        return "redirect:/users";
     }
 
     // Password management

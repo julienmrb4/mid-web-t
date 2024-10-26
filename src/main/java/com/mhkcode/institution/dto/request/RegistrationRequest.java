@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class RegistrationRequest {
-    private Long id;
+    private Long userId;
     private String email;
     private String firstname;
     private String lastname;

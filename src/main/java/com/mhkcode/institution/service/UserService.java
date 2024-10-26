@@ -18,6 +18,6 @@ User getById(Long id);
 User findByEmail(String email);
 List<User>allUsers();
 RegistrationResponse updateUser(RegistrationRequest request);
-void deleteUser(String email);
+void deleteUser(Long userId);
 
 }
