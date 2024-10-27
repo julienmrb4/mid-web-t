@@ -7,7 +7,9 @@ import com.mhkcode.institution.dto.response.ChangePasswordResponse;
 import com.mhkcode.institution.dto.response.LoginResponse;
 import com.mhkcode.institution.dto.response.RegistrationResponse;
 import com.mhkcode.institution.model.User;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
@@ -20,6 +22,6 @@ User findByEmail(String email);
 List<User>allUsers();
 RegistrationResponse updateUser(RegistrationRequest request);
 void deleteUser(Long userId);
-User setProfile(User user,String profile);
+User setProfile(User user, MultipartFile file) throws IOException;
 
 }

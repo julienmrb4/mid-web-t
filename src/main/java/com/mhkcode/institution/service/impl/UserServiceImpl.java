@@ -8,13 +8,19 @@ import com.mhkcode.institution.dto.response.LoginResponse;
 import com.mhkcode.institution.dto.response.RegistrationResponse;
 import com.mhkcode.institution.model.User;
 import com.mhkcode.institution.repository.UserRepository;
+import com.mhkcode.institution.security.JwtUtil;
 import com.mhkcode.institution.service.EmailService;
 import com.mhkcode.institution.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
 
 @Service
@@ -26,12 +32,99 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+//    @Override
+//    public RegistrationResponse addUser(RegistrationRequest request) {
+//        logger.info("Adding new user: {}", request.getEmail());
+//        RegistrationResponse response = new RegistrationResponse();
+//
+//        try {
+//            // Check if user exists
+//            User existingUser = userRepository.findByEmail(request.getEmail());
+//            if (existingUser != null) {
+//                response.setResponseStatus("400");
+//                response.setMessage("Email already exists");
+//                return response;
+//            }
+//
+//            // Create and save new user
+//            User user = new User();
+//            user.setFirstname(request.getFirstname());
+//            user.setLastname(request.getLastname());
+//            user.setEmail(request.getEmail());
+//            user.setDob(request.getDob());
+//            user.setPhoneNumber(request.getPhoneNumber());
+//            user.setPassword(request.getPassword());
+//            user.setRole(request.getRole());
+//
+//            userRepository.save(user);
+//
+//            response.setResponseStatus("201");
+//            response.setMessage("Registration successful!");
+//
+//        } catch (Exception e) {
+//            logger.error("Error during registration: {}", e.getMessage());
+//            response.setResponseStatus("500");
+//            response.setMessage("Registration failed. Please try again.");
+//        }
+//
+//        return response;
+//    }
+
+//    @Override
+//    public LoginResponse login(LoginRequest request) {
+//        logger.info("Processing login for user: {}", request.getEmail());
+//        LoginResponse response = new LoginResponse();
+//
+//        // Validate email and password before proceeding
+//        if (request.getEmail() == null || request.getEmail().isEmpty()) {
+//            response.setResponseStatus("400");
+//            response.setMessage("Email is required");
+//            return response;
+//        }
+//        if (request.getPassword() == null || request.getPassword().isEmpty()) {
+//            response.setResponseStatus("400");
+//            response.setMessage("Password is required");
+//            return response;
+//        }
+//
+//        try {
+//            // Find user by email and password
+//            User user = userRepository.findByEmailAndPassword(request.getEmail(), request.getPassword());
+//
+//            if (user != null) {
+//                // Login successful
+//                response.setResponseStatus("200");
+//                response.setMessage("Login successful");
+//                response.setRole(user.getRole().name());
+//            } else {
+//                // Invalid credentials
+//                response.setResponseStatus("401");
+//                response.setMessage("Invalid email or password");
+//            }
+//        } catch (Exception e) {
+//            // Log the error and respond with an internal server error
+//            logger.error("Error during login: {}", e.getMessage());
+//            response.setResponseStatus("500");
+//            response.setMessage("Internal server error during login");
+//        }
+//
+//        return response;
+//    }
+
     @Override
     public RegistrationResponse addUser(RegistrationRequest request) {
         logger.info("Adding new user: {}", request.getEmail());
         RegistrationResponse response = new RegistrationResponse();
 
         try {
+
+
             // Check if user exists
             User existingUser = userRepository.findByEmail(request.getEmail());
             if (existingUser != null) {
@@ -47,8 +140,12 @@ public class UserServiceImpl implements UserService {
             user.setEmail(request.getEmail());
             user.setDob(request.getDob());
             user.setPhoneNumber(request.getPhoneNumber());
-            user.setPassword(request.getPassword());
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
             user.setRole(request.getRole());
+
+            // Set default values for audit fields
+            user.setCreatedAt(LocalDateTime.now());
+            user.setActive(true);
 
             userRepository.save(user);
 
@@ -56,7 +153,7 @@ public class UserServiceImpl implements UserService {
             response.setMessage("Registration successful!");
 
         } catch (Exception e) {
-            logger.error("Error during registration: {}", e.getMessage());
+            logger.error("Error during registration: {}", e.getMessage(), e);
             response.setResponseStatus("500");
             response.setMessage("Registration failed. Please try again.");
         }
@@ -69,34 +166,25 @@ public class UserServiceImpl implements UserService {
         logger.info("Processing login for user: {}", request.getEmail());
         LoginResponse response = new LoginResponse();
 
-        // Validate email and password before proceeding
-        if (request.getEmail() == null || request.getEmail().isEmpty()) {
-            response.setResponseStatus("400");
-            response.setMessage("Email is required");
-            return response;
-        }
-        if (request.getPassword() == null || request.getPassword().isEmpty()) {
-            response.setResponseStatus("400");
-            response.setMessage("Password is required");
-            return response;
-        }
-
         try {
-            // Find user by email and password
-            User user = userRepository.findByEmailAndPassword(request.getEmail(), request.getPassword());
+            // Find user by email
+            User user = userRepository.findByEmail(request.getEmail());
 
-            if (user != null) {
-                // Login successful
+            if (user != null && passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+                // Generate JWT token
+                String token = jwtUtil.generateToken(user.getEmail(), user.getRole().name());
+
+                // Set response
                 response.setResponseStatus("200");
                 response.setMessage("Login successful");
                 response.setRole(user.getRole().name());
+                response.setToken(token);
+                //claims.put("role", user.getRole());  // Should be "ADMIN", "AGENT", or "INSTITUTION"
             } else {
-                // Invalid credentials
                 response.setResponseStatus("401");
                 response.setMessage("Invalid email or password");
             }
         } catch (Exception e) {
-            // Log the error and respond with an internal server error
             logger.error("Error during login: {}", e.getMessage());
             response.setResponseStatus("500");
             response.setMessage("Internal server error during login");
@@ -158,7 +246,8 @@ public class UserServiceImpl implements UserService {
             }
 
             // Update password
-            user.setPassword(newPassword);
+            //user.setPassword(newPassword);
+            user.setPassword(passwordEncoder.encode(newPassword));
             userRepository.save(user);
 
             // Send email with new password
@@ -252,9 +341,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User setProfile(User userData,String profile) {
-       userData.setProfilePicture(profile);
-       return userRepository.save(userData);
+    public User setProfile(User user, MultipartFile file) throws IOException {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        if (file != null && !file.isEmpty()) {
+            // Convert MultipartFile to Base64 string
+            String base64Image = Base64.getEncoder().encodeToString(file.getBytes());
+            user.setProfilePicture("data:image/" + getFileExtension(file.getOriginalFilename()) + ";base64," + base64Image);
+            return userRepository.save(user);
+        }
+        return user;
+    }
+
+    private String getFileExtension(String filename) {
+        return filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();
     }
 
 }

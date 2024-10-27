@@ -3,17 +3,24 @@ package com.mhkcode.institution.controller;
 
 import com.mhkcode.institution.dto.request.ChangePasswordRequest;
 import com.mhkcode.institution.dto.request.LoginRequest;
+import com.mhkcode.institution.dto.request.ProfilePictureRequest;
 import com.mhkcode.institution.dto.request.RegistrationRequest;
 import com.mhkcode.institution.dto.response.LoginResponse;
 import com.mhkcode.institution.model.User;
 import com.mhkcode.institution.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 
@@ -53,19 +60,34 @@ public class UserController {
         return "login";
     }
 
+//
+//    @PostMapping("/login")
+//    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+//        LoginResponse loginResponse = userService.login(request);
+//        if ("200".equals(loginResponse.getResponseStatus())) {
+//            // Token and role are now included in the response
+//            return ResponseEntity.ok(loginResponse);
+//        } else {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+//                    .body(loginResponse);
+//        }
+//    }
+
     @PostMapping("/login")
-    public String login(@ModelAttribute LoginRequest request, Model model) {
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         LoginResponse loginResponse = userService.login(request);
+
+        // Add logging
+        System.out.println("Login response: " + loginResponse);
+
         if ("200".equals(loginResponse.getResponseStatus())) {
-            return switch (loginResponse.getRole()) {
-                case "ADMIN" -> "redirect:/admin-dashboard";
-                case "AGENT" -> "redirect:/agent-dashboard";
-                case "INSTITUTION" -> "redirect:/inst-dashboard";
-                default -> "redirect:/dashboard";
-            };
+            // Debug print the token and role
+            System.out.println("Token: " + loginResponse.getToken());
+            System.out.println("Role: " + loginResponse.getRole());
+            return ResponseEntity.ok(loginResponse);
         } else {
-            model.addAttribute("error", loginResponse.getMessage());
-            return "login";
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(loginResponse);
         }
     }
 
@@ -75,18 +97,40 @@ public class UserController {
         return "dashboard";
     }
 
-    @GetMapping("/admin-dashboard")
-    public String adminDashboard() {
+//    @GetMapping("/admin-dashboard")
+//    public String adminDashboard() {
+//        return "admin-dash";
+//    }
+@GetMapping("/admin-dashboard")
+public String adminDashboard(@RequestHeader(name = "Authorization", required = false) String authHeader) {
+    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
         return "admin-dash";
     }
+    return "admin-dash";
+}
 
-    @GetMapping("/agent-dashboard")
-    public String agentDashboard() {
+//    @GetMapping("/agent-dashboard")
+//    public String agentDashboard() {
+//        return "agent-dash";
+//    }
+@GetMapping("/agent-dashboard")
+public String agentDashboard(@RequestHeader(name = "Authorization", required = false) String authHeader) {
+    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
         return "agent-dash";
     }
+    return "agent-dash";
+}
+
+//    @GetMapping("/inst-dashboard")
+//    public String instDashboard() {
+//        return "institution-dash";
+//    }
 
     @GetMapping("/inst-dashboard")
-    public String instDashboard() {
+    public String instDashboard(@RequestHeader(name = "Authorization", required = false) String authHeader) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return "institution-dash";
+        }
         return "institution-dash";
     }
 
@@ -169,5 +213,26 @@ public class UserController {
         return "change-password";
     }
 
+    @PostMapping("/upload-profile-picture")
+    public String updateProfilePicture(@RequestParam("profilePicture") MultipartFile file,
+                                       @AuthenticationPrincipal UserDetails userDetails,
+                                       RedirectAttributes redirectAttributes) {
+        try {
+            if (file.isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "Please select a file to upload");
+                return "redirect:/admin-dashboard";
+            }
 
+            User user = userService.findByEmail(userDetails.getUsername());
+            if (user != null) {
+                userService.setProfile(user, file);
+                redirectAttributes.addFlashAttribute("success", "Profile picture updated successfully");
+            } else {
+                redirectAttributes.addFlashAttribute("error", "User not found");
+            }
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Failed to update profile picture: " + e.getMessage());
+        }
+        return "redirect:/admin-dashboard";
+    }
 }

@@ -21,7 +21,10 @@ public class User {
     private String phoneNumber;
     private LocalDate dob;
     private String password;
+    private LocalDateTime createdAt;
+    private boolean active;
     @Enumerated(EnumType.STRING)
     private UserRole role ;
+    @Column(columnDefinition = "TEXT")
     private String profilePicture;
 }
