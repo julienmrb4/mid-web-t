@@ -8,6 +8,7 @@ import com.mhkcode.institution.dto.request.RegistrationRequest;
 import com.mhkcode.institution.dto.response.LoginResponse;
 import com.mhkcode.institution.model.User;
 import com.mhkcode.institution.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,7 @@ public class UserController {
     public String registerUser(@ModelAttribute RegistrationRequest request, Model model) {
         var response = userService.addUser(request);
         if ("201".equals(response.getResponseStatus())) {
-            return "redirect:/admin-dashboard";
+            return "redirect:/users";
         } else {
             model.addAttribute("error", response.getMessage());
             return "register";
@@ -214,16 +215,29 @@ public String agentDashboard(@RequestHeader(name = "Authorization", required = f
     }
 
     @PostMapping("/upload-profile-picture")
-    public String updateProfilePicture(@RequestParam("profilePicture") MultipartFile file,
-                                       @AuthenticationPrincipal UserDetails userDetails,
-                                       RedirectAttributes redirectAttributes) {
+    public String updateProfilePicture(
+            @RequestParam("profilePicture") MultipartFile file,
+            @RequestParam(value = "email", required = false) String email,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
         try {
             if (file.isEmpty()) {
                 redirectAttributes.addFlashAttribute("error", "Please select a file to upload");
                 return "redirect:/admin-dashboard";
             }
 
-            User user = userService.findByEmail(userDetails.getUsername());
+            // First try to get email from the session
+            if (email == null) {
+                email = (String) session.getAttribute("userEmail");
+            }
+
+            // Validate we have a user email
+            if (email == null) {
+                redirectAttributes.addFlashAttribute("error", "User not authenticated");
+                return "redirect:/login";
+            }
+
+            User user = userService.findByEmail(email);
             if (user != null) {
                 userService.setProfile(user, file);
                 redirectAttributes.addFlashAttribute("success", "Profile picture updated successfully");

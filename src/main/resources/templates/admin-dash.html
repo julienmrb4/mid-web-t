@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
+        /* Your existing styles remain the same */
         .profile-picture {
             width: 40px;
             height: 40px;
@@ -36,7 +37,44 @@
             width: 100%;
         }
 
-        /* Custom styles for the accordion */
+        /* Custom styles for cards */
+        .dashboard-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-icon {
+            background-color: #007bff;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Your existing accordion styles remain the same */
         .accordion-item {
             border: none;
             background-color: #343a40;
@@ -76,7 +114,6 @@
             color: white;
         }
 
-        /* Alert styles */
         .alert-floating {
             position: fixed;
             top: 20px;
@@ -98,6 +135,7 @@
     </style>
 </head>
 <body>
+
 <!-- Success/Error Alert -->
 <div th:if="${success}" class="alert alert-success alert-floating alert-dismissible fade show" role="alert">
     <span th:text="${success}"></span>
@@ -222,9 +260,125 @@
         <!-- Main Content -->
         <div class="col-md-9 col-lg-10 content">
             <!-- Content will be dynamically loaded here -->
+            <div class="col-md-9 col-lg-10 content">
+                <div class="container-fluid">
+                    <!-- Welcome Message -->
+                    <div class="row mb-4">
+                        <div class="col">
+                            <h2>Welcome Back, <span th:text="${userName}">Admin</span>!</h2>
+                            <p class="text-muted">Here's what's happening with your platform today.</p>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Cards -->
+                    <div class="row g-4 mb-4">
+                        <!-- Total Users Card -->
+                        <div class="col-12 col-sm-6 col-xl-3">
+                            <div class="dashboard-card p-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon me-3">
+                                        <i class="fas fa-users"></i>
+                                    </div>
+                                    <div>
+                                        <div class="stat-number" th:text="${totalUsers ?: '2,459'}">2,459</div>
+                                        <div class="stat-label">Total Users</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Total Institutions Card -->
+                        <div class="col-12 col-sm-6 col-xl-3">
+                            <div class="dashboard-card p-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon me-3">
+                                        <i class="fas fa-building"></i>
+                                    </div>
+                                    <div>
+                                        <div class="stat-number" th:text="${totalInstitutions ?: '156'}">156</div>
+                                        <div class="stat-label">Institutions</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Active Products Card -->
+                        <div class="col-12 col-sm-6 col-xl-3">
+                            <div class="dashboard-card p-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon me-3">
+                                        <i class="fas fa-box"></i>
+                                    </div>
+                                    <div>
+                                        <div class="stat-number" th:text="${activeProducts ?: '847'}">847</div>
+                                        <div class="stat-label">Active Products</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Monthly Revenue Card -->
+                        <div class="col-12 col-sm-6 col-xl-3">
+                            <div class="dashboard-card p-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="card-icon me-3">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <div>
+                                        <div class="stat-number" th:text="${monthlyRevenue ?: '$52K'}">$52K</div>
+                                        <div class="stat-label">Monthly Revenue</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity Section -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="dashboard-card p-4">
+                                <h4 class="mb-4">Recent Activity</h4>
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>User</th>
+                                            <th>Action</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>John Doe</td>
+                                            <td>New Registration</td>
+                                            <td>2024-02-15</td>
+                                            <td><span class="badge bg-success">Completed</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Jane Smith</td>
+                                            <td>Product Update</td>
+                                            <td>2024-02-14</td>
+                                            <td><span class="badge bg-primary">In Progress</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Mike Johnson</td>
+                                            <td>Institution Added</td>
+                                            <td>2024-02-13</td>
+                                            <td><span class="badge bg-success">Completed</span></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
 
 <!-- Footer -->
 <footer class="footer text-center">
