@@ -1,3 +1,352 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>User List - Admin Dashboard</title>-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>-->
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">-->
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">-->
+<!--    <style>-->
+<!--        .profile-picture {-->
+<!--            width: 40px;-->
+<!--            height: 40px;-->
+<!--            border-radius: 50%;-->
+<!--            object-fit: cover;-->
+<!--        }-->
+
+<!--        .sidebar {-->
+<!--            min-height: calc(100vh - 56px);-->
+<!--            background-color: #343a40;-->
+<!--        }-->
+
+<!--        .content {-->
+<!--            padding: 20px;-->
+<!--        }-->
+
+<!--        .dropdown-menu-right {-->
+<!--            right: 0;-->
+<!--            left: auto;-->
+<!--        }-->
+
+<!--        .footer {-->
+<!--            background-color: #343a40;-->
+<!--            color: white;-->
+<!--            padding: 1rem 0;-->
+<!--            position: fixed;-->
+<!--            bottom: 0;-->
+<!--            width: 100%;-->
+<!--        }-->
+
+<!--        .table-container {-->
+<!--            margin-top: 2rem;-->
+<!--            background: white;-->
+<!--            border-radius: 8px;-->
+<!--            box-shadow: 0 0 15px rgba(0,0,0,0.1);-->
+<!--            padding: 1.5rem;-->
+<!--        }-->
+
+<!--        .search-filters {-->
+<!--            background: #f8f9fa;-->
+<!--            padding: 1rem;-->
+<!--            border-radius: 8px;-->
+<!--            margin-bottom: 1rem;-->
+<!--        }-->
+
+<!--        .table th {-->
+<!--            background-color: #f8f9fa;-->
+<!--            color: #495057;-->
+<!--        }-->
+
+<!--        .table-hover tbody tr:hover {-->
+<!--            background-color: #f8f9fa;-->
+<!--            transition: background-color 0.2s ease-in-out;-->
+<!--        }-->
+
+<!--        .action-btn {-->
+<!--            padding: 0.25rem 0.5rem;-->
+<!--            font-size: 0.875rem;-->
+<!--        }-->
+
+<!--        .filter-badge {-->
+<!--            margin-right: 0.5rem;-->
+<!--            cursor: pointer;-->
+<!--        }-->
+
+<!--        .page-content {-->
+<!--            margin-bottom: 60px; /* Account for fixed footer */-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--&lt;!&ndash; Top Navbar &ndash;&gt;-->
+<!--<nav class="navbar navbar-expand-lg navbar-dark bg-dark">-->
+<!--    <div class="container-fluid">-->
+<!--        <a class="navbar-brand" href="#">Admin Panel</a>-->
+<!--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar">-->
+<!--            <span class="navbar-toggler-icon"></span>-->
+<!--        </button>-->
+
+<!--        <div class="collapse navbar-collapse" id="topNavbar">-->
+<!--            <ul class="navbar-nav ms-auto">-->
+<!--                <li class="nav-item dropdown">-->
+<!--                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">-->
+<!--                        <img th:src="${profilePicture != null} ? ${profilePicture} : '/images/default-profile.png'" alt="Profile" class="profile-picture me-2">-->
+<!--                        <span th:text="${userName}">Admin Name</span>-->
+<!--                    </a>-->
+<!--                    <ul class="dropdown-menu dropdown-menu-end">-->
+<!--                        <li>-->
+<!--                            <form th:action="@{/upload-profile-picture}" method="post" enctype="multipart/form-data" class="px-3 py-2">-->
+<!--                                <div class="mb-2">-->
+<!--                                    <input type="file" name="profilePicture" class="form-control form-control-sm" accept="image/*">-->
+<!--                                </div>-->
+<!--                                <button type="submit" class="btn btn-sm btn-primary w-100">Upload Picture</button>-->
+<!--                            </form>-->
+<!--                        </li>-->
+<!--                        <li><hr class="dropdown-divider"></li>-->
+<!--                        <li><a class="dropdown-item" th:href="@{/change-password}">Change Password</a></li>-->
+<!--                        <li><a class="dropdown-item" th:href="@{/logout}">Logout</a></li>-->
+<!--                    </ul>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</nav>-->
+
+<!--<div class="container-fluid page-content">-->
+<!--    <div class="row">-->
+<!--        &lt;!&ndash; Left Sidebar &ndash;&gt;-->
+<!--        <div class="col-md-3 col-lg-2 sidebar p-0">-->
+<!--            <div class="accordion" id="sidebarAccordion">-->
+<!--                &lt;!&ndash; Users Management &ndash;&gt;-->
+<!--                <div class="accordion-item">-->
+<!--                    <h2 class="accordion-header">-->
+<!--                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#usersCollapse">-->
+<!--                            <i class="fas fa-users me-2"></i>Users Management-->
+<!--                        </button>-->
+<!--                    </h2>-->
+<!--                    <div id="usersCollapse" class="accordion-collapse collapse show">-->
+<!--                        <div class="accordion-body p-0">-->
+<!--                            <div class="list-group">-->
+<!--                                <a th:href="@{/register}" class="list-group-item list-group-item-action">-->
+<!--                                    <i class="fas fa-plus me-2"></i>New User-->
+<!--                                </a>-->
+<!--                                <a th:href="@{/users}" class="list-group-item list-group-item-action active">-->
+<!--                                    <i class="fas fa-list me-2"></i>View Users-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Institutions Management &ndash;&gt;-->
+<!--                <div class="accordion-item">-->
+<!--                    <h2 class="accordion-header">-->
+<!--                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#institutionsCollapse">-->
+<!--                            <i class="fas fa-building me-2"></i>Institutions-->
+<!--                        </button>-->
+<!--                    </h2>-->
+<!--                    <div id="institutionsCollapse" class="accordion-collapse collapse">-->
+<!--                        <div class="accordion-body p-0">-->
+<!--                            <div class="list-group">-->
+<!--                                <a href="#" class="list-group-item list-group-item-action">New Institution</a>-->
+<!--                                <a href="#" class="list-group-item list-group-item-action">View Institutions</a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Products Management &ndash;&gt;-->
+<!--                <div class="accordion-item">-->
+<!--                    <h2 class="accordion-header">-->
+<!--                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#productsCollapse">-->
+<!--                            <i class="fas fa-box me-2"></i>Products-->
+<!--                        </button>-->
+<!--                    </h2>-->
+<!--                    <div id="productsCollapse" class="accordion-collapse collapse">-->
+<!--                        <div class="accordion-body p-0">-->
+<!--                            <div class="list-group">-->
+<!--                                <a href="#" class="list-group-item list-group-item-action">New Product</a>-->
+<!--                                <a href="#" class="list-group-item list-group-item-action">View Products</a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Main Content &ndash;&gt;-->
+<!--        <div class="col-md-9 col-lg-10 content">-->
+<!--            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">-->
+<!--                <span th:text="${successMessage}"></span>-->
+<!--                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+<!--            </div>-->
+<!--            <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">-->
+<!--                <span th:text="${errorMessage}"></span>-->
+<!--                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>-->
+<!--            </div>-->
+
+<!--            <div class="table-container">-->
+<!--                <div class="d-flex justify-content-between align-items-center mb-4">-->
+<!--                    <h2 class="mb-0">User Management</h2>-->
+<!--                    <a th:href="@{/register}" class="btn btn-primary">-->
+<!--                        <i class="fas fa-plus me-2"></i>Add New User-->
+<!--                    </a>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Search and Filters &ndash;&gt;-->
+<!--                <div class="search-filters">-->
+<!--                    <div class="row g-3">-->
+<!--                        <div class="col-md-4">-->
+<!--                            <div class="input-group">-->
+<!--                                <span class="input-group-text"><i class="fas fa-search"></i></span>-->
+<!--                                <input type="text" class="form-control" id="searchInput" placeholder="Search users...">-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-4">-->
+<!--                            <select class="form-select" id="roleFilter">-->
+<!--                                <option value="">All Roles</option>-->
+<!--                                <option value="ADMIN">Admin</option>-->
+<!--                                <option value="USER">User</option>-->
+<!--                                <option value="MANAGER">Manager</option>-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                        <div class="col-md-4">-->
+<!--                            <button class="btn btn-outline-secondary" type="button" id="clearFilters">-->
+<!--                                Clear Filters-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; User Table &ndash;&gt;-->
+<!--                <div class="table-responsive">-->
+<!--                    <table class="table table-hover">-->
+<!--                        <thead>-->
+<!--                        <tr>-->
+<!--                            <th>#</th>-->
+<!--                            <th>First Name</th>-->
+<!--                            <th>Last Name</th>-->
+<!--                            <th>Email</th>-->
+<!--                            <th>Date of Birth</th>-->
+<!--                            <th>Phone Number</th>-->
+<!--                            <th>Role</th>-->
+<!--                            <th>Actions</th>-->
+<!--                        </tr>-->
+<!--                        </thead>-->
+<!--                        <tbody>-->
+<!--                        <tr th:each="user, iterStat : ${users}">-->
+<!--                            <td th:text="${iterStat.index + 1}"></td>-->
+<!--                            <td th:text="${user.firstname}"></td>-->
+<!--                            <td th:text="${user.lastname}"></td>-->
+<!--                            <td th:text="${user.email}"></td>-->
+<!--                            <td th:text="${user.dob}"></td>-->
+<!--                            <td th:text="${user.phoneNumber}"></td>-->
+<!--                            <td>-->
+<!--                                    <span th:class="${user.role == 'ADMIN' ? 'badge bg-danger' : (user.role == 'MANAGER' ? 'badge bg-warning' : 'badge bg-info')}"-->
+<!--                                          th:text="${user.role}">-->
+<!--                                    </span>-->
+<!--                            </td>-->
+<!--                            <td>-->
+<!--                                <div class="btn-group">-->
+<!--                                    <a th:href="@{/users/update/{id}(id=${user.userId})}"-->
+<!--                                       class="btn btn-sm btn-outline-primary action-btn">-->
+<!--                                        <i class="fas fa-edit"></i>-->
+<!--                                    </a>-->
+<!--                                    <button type="button"-->
+<!--                                            class="btn btn-sm btn-outline-danger action-btn"-->
+<!--                                            th:onclick="'confirmDelete(' + ${user.userId} + ')'">-->
+<!--                                        <i class="fas fa-trash"></i>-->
+<!--                                    </button>-->
+<!--                                </div>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        </tbody>-->
+<!--                    </table>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Footer &ndash;&gt;-->
+<!--<footer class="footer text-center">-->
+<!--    <div class="container">-->
+<!--        <span>© 2024 mhkcode julien. All rights reserved.</span>-->
+<!--    </div>-->
+<!--</footer>-->
+
+<!--&lt;!&ndash; Delete Confirmation Modal &ndash;&gt;-->
+<!--<div class="modal fade" id="deleteModal" tabindex="-1">-->
+<!--    <div class="modal-dialog">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title">Confirm Delete</h5>-->
+<!--                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                Are you sure you want to delete this user?-->
+<!--            </div>-->
+<!--            <div class="modal-footer">-->
+<!--                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>-->
+<!--                <form id="deleteForm" method="post">-->
+<!--                    <button type="submit" class="btn btn-danger">Delete</button>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--<script>-->
+<!--    // Search and filter functionality-->
+<!--    document.addEventListener('DOMContentLoaded', function() {-->
+<!--        const searchInput = document.getElementById('searchInput');-->
+<!--        const roleFilter = document.getElementById('roleFilter');-->
+<!--        const clearFiltersBtn = document.getElementById('clearFilters');-->
+<!--        const tableRows = document.querySelectorAll('tbody tr');-->
+
+<!--        function filterTable() {-->
+<!--            const searchText = searchInput.value.toLowerCase();-->
+<!--            const selectedRole = roleFilter.value.toLowerCase();-->
+
+<!--            tableRows.forEach(row => {-->
+<!--                const text = row.textContent.toLowerCase();-->
+<!--                const roleCell = row.querySelector('td:nth-child(7)').textContent.toLowerCase();-->
+<!--                const matchesSearch = text.includes(searchText);-->
+<!--                const matchesRole = !selectedRole || roleCell.includes(selectedRole);-->
+
+<!--                row.style.display = matchesSearch && matchesRole ? '' : 'none';-->
+<!--            });-->
+<!--        }-->
+
+<!--        searchInput.addEventListener('keyup', filterTable);-->
+<!--        roleFilter.addEventListener('change', filterTable);-->
+
+<!--        clearFiltersBtn.addEventListener('click', function() {-->
+<!--            searchInput.value = '';-->
+<!--            roleFilter.value = '';-->
+<!--            filterTable();-->
+<!--        });-->
+<!--    });-->
+
+<!--    // Delete confirmation-->
+<!--    function confirmDelete(userId) {-->
+<!--        const deleteForm = document.getElementById('deleteForm');-->
+<!--        deleteForm.action = `/users/delete/${userId}`;-->
+<!--        new bootstrap.Modal(document.getElementById('deleteModal')).show();-->
+<!--    }-->
+<!--</script>-->
+
+<!--</body>-->
+<!--</html>-->
+
+
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -6,6 +355,10 @@
     <title>User List - Admin Dashboard</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <!-- Added Export Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
@@ -75,7 +428,26 @@
         }
 
         .page-content {
-            margin-bottom: 60px; /* Account for fixed footer */
+            margin-bottom: 60px;
+        }
+
+        /* Added styles for export features */
+        .export-buttons {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: right;
+        }
+
+        .export-buttons .btn {
+            margin-left: 0.5rem;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
         }
     </style>
 </head>
@@ -222,7 +594,7 @@
 
                 <!-- User Table -->
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table class="table table-hover" id="usersTable">
                         <thead>
                         <tr>
                             <th>#</th>
@@ -232,7 +604,7 @@
                             <th>Date of Birth</th>
                             <th>Phone Number</th>
                             <th>Role</th>
-                            <th>Actions</th>
+                            <th class="no-print">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -244,11 +616,11 @@
                             <td th:text="${user.dob}"></td>
                             <td th:text="${user.phoneNumber}"></td>
                             <td>
-                                    <span th:class="${user.role == 'ADMIN' ? 'badge bg-danger' : (user.role == 'MANAGER' ? 'badge bg-warning' : 'badge bg-info')}"
-                                          th:text="${user.role}">
-                                    </span>
+                                <span th:class="${user.role == 'ADMIN' ? 'badge bg-danger' : (user.role == 'MANAGER' ? 'badge bg-warning' : 'badge bg-info')}"
+                                      th:text="${user.role}">
+                                </span>
                             </td>
-                            <td>
+                            <td class="no-print">
                                 <div class="btn-group">
                                     <a th:href="@{/users/update/{id}(id=${user.userId})}"
                                        class="btn btn-sm btn-outline-primary action-btn">
@@ -264,6 +636,16 @@
                         </tr>
                         </tbody>
                     </table>
+
+                    <!-- Export Buttons -->
+                    <div class="export-buttons">
+                        <button class="btn btn-success" onclick="exportToExcel()">
+                            <i class="fas fa-file-excel me-2"></i>Export to Excel
+                        </button>
+                        <button class="btn btn-danger" onclick="exportToPDF()">
+                            <i class="fas fa-file-pdf me-2"></i>Export to PDF
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -336,7 +718,44 @@
         deleteForm.action = `/users/delete/${userId}`;
         new bootstrap.Modal(document.getElementById('deleteModal')).show();
     }
-</script>
 
-</body>
-</html>
+    // Export to Excel function
+    function exportToExcel() {
+        const table = document.getElementById('usersTable');
+        const ws = XLSX.utils.table_to_sheet(table, {raw: true});
+
+        // Remove the Actions column
+        const range = XLSX.utils.decode_range(ws['!ref']);
+        for (let R = range.s.r; R <= range.e.r; ++R) {
+            delete ws[XLSX.utils.encode_cell({r: R, c: 7})]; // Delete the 8th column (Actions)
+        }
+
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Users');
+
+        // Generate the Excel file
+        XLSX.writeFile(wb, 'users_list.xlsx');
+    }
+
+    // Export to PDF function
+    function exportToPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('l', 'pt', 'a4');
+
+        // Hide the actions column before capturing
+        const actionCells = document.querySelectorAll('.no-print');
+        actionCells.forEach(cell => cell.style.display = 'none');
+
+        html2canvas(document.getElementById('usersTable')).then(canvas => {
+            // Show the actions column again
+            actionCells.forEach(cell => cell.style.display = '');
+
+            const imgData = canvas.toDataURL('image/png');
+            const imgWidth = doc.internal.pageSize.getWidth();
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+            doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+            doc.save('users_list.pdf');
+        });
+    }
+</script>

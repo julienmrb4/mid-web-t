@@ -9,6 +9,7 @@ import com.mhkcode.institution.dto.response.RegistrationResponse;
 import com.mhkcode.institution.model.User;
 import com.mhkcode.institution.repository.UserRepository;
 import com.mhkcode.institution.security.JwtUtil;
+import com.mhkcode.institution.service.AuditService;
 import com.mhkcode.institution.service.EmailService;
 import com.mhkcode.institution.service.UserService;
 import org.slf4j.Logger;
@@ -37,6 +38,10 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+    @Autowired
+    private AuditService auditService;
+
 
 //    @Override
 //    public RegistrationResponse addUser(RegistrationRequest request) {
@@ -148,6 +153,9 @@ public class UserServiceImpl implements UserService {
             user.setActive(true);
 
             userRepository.save(user);
+
+            // Add audit log after successful save
+            auditService.logAudit(user, "CREATE", request.getEmail());
 
             response.setResponseStatus("201");
             response.setMessage("Registration successful!");
@@ -310,7 +318,7 @@ public class UserServiceImpl implements UserService {
             existingUser.setRole(request.getRole());
 
             userRepository.save(existingUser);
-
+            auditService.logAudit(existingUser, "UPDATE", request.getEmail());
             response.setResponseStatus("200");
             response.setMessage("User updated successfully");
 
@@ -329,6 +337,7 @@ public class UserServiceImpl implements UserService {
         try {
             User user = userRepository.findByUserId(id);
             if (user != null) {
+                auditService.logAudit(user, "DELETE", user.getEmail());
                 userRepository.delete(user);
                 logger.info("User deleted successfully: {}", id);
             } else {

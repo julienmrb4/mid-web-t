@@ -1,5 +1,6 @@
 package com.mhkcode.institution.model;
 
+//import com.mhkcode.institution.listener.AuditListener;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Table(name = "users")
 @Getter
 @Setter
+//@EntityListeners(AuditListener.class)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
