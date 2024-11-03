@@ -181,6 +181,123 @@
     <!-- Main Content -->
     <div class="col-md-9 col-lg-10 content">
       <!-- Content will be dynamically loaded here -->
+      <!-- Summary Cards Row -->
+      <div class="container-fluid">
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="card bg-primary text-white">
+              <div class="card-body">
+                <h5 class="card-title">Total Orders</h5>
+                <h2 class="mb-0">156</h2>
+                <small>This Month</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card bg-success text-white">
+              <div class="card-body">
+                <h5 class="card-title">Completed</h5>
+                <h2 class="mb-0">124</h2>
+                <small>Orders Fulfilled</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+              <div class="card-body">
+                <h5 class="card-title">Pending</h5>
+                <h2 class="mb-0">32</h2>
+                <small>Awaiting Action</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card bg-info text-white">
+              <div class="card-body">
+                <h5 class="card-title">Products</h5>
+                <h2 class="mb-0">45</h2>
+                <small>In Stock</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Order Form and Recent Activity -->
+        <div class="row">
+          <!-- Quick Order Form -->
+          <div class="col-md-6 mb-4">
+            <div class="card">
+              <div class="card-header bg-dark text-white">
+                <h5 class="card-title mb-0">Quick Order Form</h5>
+              </div>
+              <div class="card-body">
+                <form>
+                  <div class="mb-3">
+                    <label class="form-label">Product</label>
+                    <select class="form-select">
+                      <option>Select Product</option>
+                      <option>Product 1</option>
+                      <option>Product 2</option>
+                      <option>Product 3</option>
+                    </select>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label class="form-label">Quantity</label>
+                      <input type="number" class="form-control" min="1">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Priority</label>
+                      <select class="form-select">
+                        <option>Normal</option>
+                        <option>High</option>
+                        <option>Urgent</option>
+                      </select>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit Order</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="col-md-6 mb-4">
+            <div class="card">
+              <div class="card-header bg-dark text-white">
+                <h5 class="card-title mb-0">Recent Activity</h5>
+              </div>
+              <div class="card-body">
+                <div class="list-group list-group-flush">
+                  <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6 class="mb-0">Order #12345 Completed</h6>
+                      <small class="text-muted">2 hours ago</small>
+                    </div>
+                    <span class="badge bg-success">Completed</span>
+                  </div>
+                  <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6 class="mb-0">New Order #12346</h6>
+                      <small class="text-muted">3 hours ago</small>
+                    </div>
+                    <span class="badge bg-warning">Pending</span>
+                  </div>
+                  <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6 class="mb-0">Stock Update: Product X</h6>
+                      <small class="text-muted">5 hours ago</small>
+                    </div>
+                    <span class="badge bg-info">Inventory</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

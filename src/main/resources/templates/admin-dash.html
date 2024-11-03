@@ -1,3 +1,407 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en" xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>Admin Dashboard</title>-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>-->
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>-->
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">-->
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">-->
+<!--    <style>-->
+<!--        /* Your existing styles remain the same */-->
+<!--        .profile-picture {-->
+<!--            width: 40px;-->
+<!--            height: 40px;-->
+<!--            border-radius: 50%;-->
+<!--            object-fit: cover;-->
+<!--            border: 2px solid #fff;-->
+<!--        }-->
+
+<!--        .sidebar {-->
+<!--            min-height: calc(100vh - 56px);-->
+<!--            background-color: #343a40;-->
+<!--        }-->
+
+<!--        .content {-->
+<!--            padding: 20px;-->
+<!--            margin-bottom: 60px;-->
+<!--        }-->
+
+<!--        .footer {-->
+<!--            background-color: #343a40;-->
+<!--            color: white;-->
+<!--            padding: 1rem 0;-->
+<!--            position: fixed;-->
+<!--            bottom: 0;-->
+<!--            width: 100%;-->
+<!--        }-->
+
+<!--        /* Custom styles for cards */-->
+<!--        .dashboard-card {-->
+<!--            background: white;-->
+<!--            border-radius: 10px;-->
+<!--            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);-->
+<!--            transition: transform 0.2s;-->
+<!--        }-->
+
+<!--        .dashboard-card:hover {-->
+<!--            transform: translateY(-5px);-->
+<!--        }-->
+
+<!--        .card-icon {-->
+<!--            background-color: #007bff;-->
+<!--            color: white;-->
+<!--            width: 50px;-->
+<!--            height: 50px;-->
+<!--            border-radius: 10px;-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            justify-content: center;-->
+<!--            font-size: 1.5rem;-->
+<!--        }-->
+
+<!--        .stat-number {-->
+<!--            font-size: 1.8rem;-->
+<!--            font-weight: bold;-->
+<!--            color: #007bff;-->
+<!--        }-->
+
+<!--        .stat-label {-->
+<!--            color: #6c757d;-->
+<!--            font-size: 0.9rem;-->
+<!--            text-transform: uppercase;-->
+<!--            letter-spacing: 1px;-->
+<!--        }-->
+
+<!--        /* Your existing accordion styles remain the same */-->
+<!--        .accordion-item {-->
+<!--            border: none;-->
+<!--            background-color: #343a40;-->
+<!--        }-->
+
+<!--        .accordion-button {-->
+<!--            background-color: #343a40;-->
+<!--            color: white;-->
+<!--            padding: 1rem 1.25rem;-->
+<!--        }-->
+
+<!--        .accordion-button:not(.collapsed) {-->
+<!--            background-color: #2c3136;-->
+<!--            color: white;-->
+<!--            box-shadow: none;-->
+<!--        }-->
+
+<!--        .accordion-button::after {-->
+<!--            filter: brightness(0) invert(1);-->
+<!--        }-->
+
+<!--        .accordion-body {-->
+<!--            background-color: #2c3136;-->
+<!--            padding: 0;-->
+<!--        }-->
+
+<!--        .list-group-item {-->
+<!--            background-color: transparent;-->
+<!--            border: none;-->
+<!--            color: #adb5bd;-->
+<!--            padding: 0.75rem 2.5rem;-->
+<!--            transition: all 0.3s;-->
+<!--        }-->
+
+<!--        .list-group-item:hover {-->
+<!--            background-color: #404850;-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        .alert-floating {-->
+<!--            position: fixed;-->
+<!--            top: 20px;-->
+<!--            right: 20px;-->
+<!--            z-index: 1050;-->
+<!--            animation: slideIn 0.5s ease-out;-->
+<!--        }-->
+
+<!--        @keyframes slideIn {-->
+<!--            from {-->
+<!--                transform: translateX(100%);-->
+<!--                opacity: 0;-->
+<!--            }-->
+<!--            to {-->
+<!--                transform: translateX(0);-->
+<!--                opacity: 1;-->
+<!--            }-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+
+<!--&lt;!&ndash; Success/Error Alert &ndash;&gt;-->
+<!--<div th:if="${success}" class="alert alert-success alert-floating alert-dismissible fade show" role="alert">-->
+<!--    <span th:text="${success}"></span>-->
+<!--    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>-->
+<!--</div>-->
+<!--<div th:if="${error}" class="alert alert-danger alert-floating alert-dismissible fade show" role="alert">-->
+<!--    <span th:text="${error}"></span>-->
+<!--    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Top Navbar &ndash;&gt;-->
+<!--<nav class="navbar navbar-expand-lg navbar-dark bg-dark">-->
+<!--    <div class="container-fluid">-->
+<!--        <a class="navbar-brand" href="#">-->
+<!--            <i class="fas fa-shield-alt me-2"></i>Admin Panel-->
+<!--        </a>-->
+<!--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar">-->
+<!--            <span class="navbar-toggler-icon"></span>-->
+<!--        </button>-->
+
+<!--        <div class="collapse navbar-collapse" id="topNavbar">-->
+<!--            <ul class="navbar-nav ms-auto">-->
+<!--                &lt;!&ndash; Profile Dropdown &ndash;&gt;-->
+<!--                <li class="nav-item dropdown">-->
+<!--                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">-->
+<!--                        <img th:src="${profilePicture != null} ? ${profilePicture} : '/images/default-profile.png'"-->
+<!--                             alt="Profile" class="profile-picture me-2">-->
+<!--                        <span th:text="${userName}">Admin Name</span>-->
+<!--                    </a>-->
+<!--                    <div class="dropdown-menu dropdown-menu-end">-->
+<!--                        &lt;!&ndash; Profile Picture Upload Form &ndash;&gt;-->
+<!--                        <form th:action="@{/upload-profile-picture}" method="post" enctype="multipart/form-data" class="px-3 py-2">-->
+<!--                            <div class="mb-2">-->
+<!--                                <input type="file" name="profilePicture" class="form-control form-control-sm" accept="image/*" required>-->
+<!--                            </div>-->
+<!--                            <button type="submit" class="btn btn-primary btn-sm w-100">Upload Picture</button>-->
+<!--                        </form>-->
+<!--                        <div class="dropdown-divider"></div>-->
+<!--                        <a class="dropdown-item" th:href="@{/change-password}">-->
+<!--                            <i class="fas fa-key me-2"></i>Change Password-->
+<!--                        </a>-->
+<!--                        <a class="dropdown-item text-danger" th:href="@{/logout}">-->
+<!--                            <i class="fas fa-sign-out-alt me-2"></i>Logout-->
+<!--                        </a>-->
+<!--                    </div>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</nav>-->
+
+<!--<div class="container-fluid">-->
+<!--    <div class="row">-->
+<!--        &lt;!&ndash; Left Sidebar &ndash;&gt;-->
+<!--        <div class="col-md-3 col-lg-2 sidebar p-0">-->
+<!--            <div class="accordion" id="sidebarAccordion">-->
+<!--                &lt;!&ndash; Users Management &ndash;&gt;-->
+<!--                <div class="accordion-item">-->
+<!--                    <h2 class="accordion-header">-->
+<!--                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#usersCollapse">-->
+<!--                            <i class="fas fa-users me-2"></i>Users Management-->
+<!--                        </button>-->
+<!--                    </h2>-->
+<!--                    <div id="usersCollapse" class="accordion-collapse collapse show">-->
+<!--                        <div class="accordion-body">-->
+<!--                            <div class="list-group">-->
+<!--                                <a th:href="@{/register}" class="list-group-item list-group-item-action">-->
+<!--                                    <i class="fas fa-plus me-2"></i>New User-->
+<!--                                </a>-->
+<!--                                <a th:href="@{/users}" class="list-group-item list-group-item-action">-->
+<!--                                    <i class="fas fa-list me-2"></i>View Users-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Institutions Management &ndash;&gt;-->
+<!--                <div class="accordion-item">-->
+<!--                    <h2 class="accordion-header">-->
+<!--                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#institutionsCollapse">-->
+<!--                            <i class="fas fa-building me-2"></i>Institutions-->
+<!--                        </button>-->
+<!--                    </h2>-->
+<!--                    <div id="institutionsCollapse" class="accordion-collapse collapse">-->
+<!--                        <div class="accordion-body">-->
+<!--                            <div class="list-group">-->
+<!--                                <a href="#" class="list-group-item list-group-item-action">-->
+<!--                                    <i class="fas fa-plus me-2"></i>New Institution-->
+<!--                                </a>-->
+<!--                                <a href="#" class="list-group-item list-group-item-action">-->
+<!--                                    <i class="fas fa-list me-2"></i>View Institutions-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Products Management &ndash;&gt;-->
+<!--                <div class="accordion-item">-->
+<!--                    <h2 class="accordion-header">-->
+<!--                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#productsCollapse">-->
+<!--                            <i class="fas fa-box me-2"></i>Products-->
+<!--                        </button>-->
+<!--                    </h2>-->
+<!--                    <div id="productsCollapse" class="accordion-collapse collapse">-->
+<!--                        <div class="accordion-body">-->
+<!--                            <div class="list-group">-->
+<!--                                <a href="#" class="list-group-item list-group-item-action">-->
+<!--                                    <i class="fas fa-plus me-2"></i>New Product-->
+<!--                                </a>-->
+<!--                                <a href="#" class="list-group-item list-group-item-action">-->
+<!--                                    <i class="fas fa-list me-2"></i>View Products-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Main Content &ndash;&gt;-->
+<!--        <div class="col-md-9 col-lg-10 content">-->
+<!--            &lt;!&ndash; Content will be dynamically loaded here &ndash;&gt;-->
+<!--            <div class="col-md-9 col-lg-10 content">-->
+<!--                <div class="container-fluid">-->
+<!--                    &lt;!&ndash; Welcome Message &ndash;&gt;-->
+<!--                    <div class="row mb-4">-->
+<!--                        <div class="col">-->
+<!--                            <h2>Welcome Back, <span th:text="${userName}">Admin</span>!</h2>-->
+<!--                            <p class="text-muted">Here's what's happening with your platform today.</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Dashboard Cards &ndash;&gt;-->
+<!--                    <div class="row g-4 mb-4">-->
+<!--                        &lt;!&ndash; Total Users Card &ndash;&gt;-->
+<!--                        <div class="col-12 col-sm-6 col-xl-3">-->
+<!--                            <div class="dashboard-card p-3">-->
+<!--                                <div class="d-flex align-items-center">-->
+<!--                                    <div class="card-icon me-3">-->
+<!--                                        <i class="fas fa-users"></i>-->
+<!--                                    </div>-->
+<!--                                    <div>-->
+<!--                                        <div class="stat-number" th:text="${totalUsers ?: '2,459'}">2,459</div>-->
+<!--                                        <div class="stat-label">Total Users</div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+<!--                        &lt;!&ndash; Total Institutions Card &ndash;&gt;-->
+<!--                        <div class="col-12 col-sm-6 col-xl-3">-->
+<!--                            <div class="dashboard-card p-3">-->
+<!--                                <div class="d-flex align-items-center">-->
+<!--                                    <div class="card-icon me-3">-->
+<!--                                        <i class="fas fa-building"></i>-->
+<!--                                    </div>-->
+<!--                                    <div>-->
+<!--                                        <div class="stat-number" th:text="${totalInstitutions ?: '156'}">156</div>-->
+<!--                                        <div class="stat-label">Institutions</div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+<!--                        &lt;!&ndash; Active Products Card &ndash;&gt;-->
+<!--                        <div class="col-12 col-sm-6 col-xl-3">-->
+<!--                            <div class="dashboard-card p-3">-->
+<!--                                <div class="d-flex align-items-center">-->
+<!--                                    <div class="card-icon me-3">-->
+<!--                                        <i class="fas fa-box"></i>-->
+<!--                                    </div>-->
+<!--                                    <div>-->
+<!--                                        <div class="stat-number" th:text="${activeProducts ?: '847'}">847</div>-->
+<!--                                        <div class="stat-label">Active Products</div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+<!--                        &lt;!&ndash; Monthly Revenue Card &ndash;&gt;-->
+<!--                        <div class="col-12 col-sm-6 col-xl-3">-->
+<!--                            <div class="dashboard-card p-3">-->
+<!--                                <div class="d-flex align-items-center">-->
+<!--                                    <div class="card-icon me-3">-->
+<!--                                        <i class="fas fa-chart-line"></i>-->
+<!--                                    </div>-->
+<!--                                    <div>-->
+<!--                                        <div class="stat-number" th:text="${monthlyRevenue ?: '$52K'}">$52K</div>-->
+<!--                                        <div class="stat-label">Monthly Revenue</div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Recent Activity Section &ndash;&gt;-->
+<!--                    <div class="row">-->
+<!--                        <div class="col-12">-->
+<!--                            <div class="dashboard-card p-4">-->
+<!--                                <h4 class="mb-4">Recent Activity</h4>-->
+<!--                                <div class="table-responsive">-->
+<!--                                    <table class="table table-hover">-->
+<!--                                        <thead>-->
+<!--                                        <tr>-->
+<!--                                            <th>User</th>-->
+<!--                                            <th>Action</th>-->
+<!--                                            <th>Date</th>-->
+<!--                                            <th>Status</th>-->
+<!--                                        </tr>-->
+<!--                                        </thead>-->
+<!--                                        <tbody>-->
+<!--                                        <tr>-->
+<!--                                            <td>John Doe</td>-->
+<!--                                            <td>New Registration</td>-->
+<!--                                            <td>2024-02-15</td>-->
+<!--                                            <td><span class="badge bg-success">Completed</span></td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td>Jane Smith</td>-->
+<!--                                            <td>Product Update</td>-->
+<!--                                            <td>2024-02-14</td>-->
+<!--                                            <td><span class="badge bg-primary">In Progress</span></td>-->
+<!--                                        </tr>-->
+<!--                                        <tr>-->
+<!--                                            <td>Mike Johnson</td>-->
+<!--                                            <td>Institution Added</td>-->
+<!--                                            <td>2024-02-13</td>-->
+<!--                                            <td><span class="badge bg-success">Completed</span></td>-->
+<!--                                        </tr>-->
+<!--                                        </tbody>-->
+<!--                                    </table>-->
+
+<!--                                    <div class="mt-3">-->
+<!--                                        <button class="btn btn-success me-2" onclick="exportToExcel()">-->
+<!--                                            <i class="fas fa-file-excel me-2"></i>Export to Excel-->
+<!--                                        </button>-->
+<!--                                        <button class="btn btn-danger" onclick="exportToPDF()">-->
+<!--                                            <i class="fas fa-file-pdf me-2"></i>Export to PDF-->
+<!--                                        </button>-->
+<!--                                    </div>-->
+
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+
+<!--&lt;!&ndash; Footer &ndash;&gt;-->
+<!--<footer class="footer text-center">-->
+<!--    <div class="container">-->
+<!--        <span>© 2024 mhkcode julien. All rights reserved.</span>-->
+<!--    </div>-->
+<!--</footer>-->
+
+<!--</body>-->
+<!--</html>-->
+
+
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -6,28 +410,53 @@
     <title>Admin Dashboard</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-        /* Your existing styles remain the same */
-        .profile-picture {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #fff;
-        }
-
         .sidebar {
             min-height: calc(100vh - 56px);
             background-color: #343a40;
         }
+        .stat-card { transition: transform 0.2s; }
+        .stat-card:hover { transform: translateY(-5px); }
+        .chart-container { height: 300px; margin-bottom: 20px; }
 
-        .content {
-            padding: 20px;
-            margin-bottom: 60px;
+        /* Accordion Styles */
+        .accordion-item {
+            border: none;
+            background-color: #343a40;
+        }
+        .accordion-button {
+            background-color: #343a40;
+            color: white;
+            padding: 1rem 1.25rem;
+        }
+        .accordion-button:not(.collapsed) {
+            background-color: #2c3136;
+            color: white;
+            box-shadow: none;
+        }
+        .accordion-button::after {
+            filter: brightness(0) invert(1);
+        }
+        .accordion-body {
+            background-color: #2c3136;
+            padding: 0;
+        }
+        .list-group-item {
+            background-color: transparent;
+            border: none;
+            color: #adb5bd;
+            padding: 0.75rem 2.5rem;
+            transition: all 0.3s;
+        }
+        .list-group-item:hover {
+            background-color: #404850;
+            color: white;
         }
 
+        /* Footer */
         .footer {
             background-color: #343a40;
             color: white;
@@ -37,151 +466,25 @@
             width: 100%;
         }
 
-        /* Custom styles for cards */
-        .dashboard-card {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s;
-        }
-
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .card-icon {
-            background-color: #007bff;
-            color: white;
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-        }
-
-        .stat-number {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: #007bff;
-        }
-
-        .stat-label {
-            color: #6c757d;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Your existing accordion styles remain the same */
-        .accordion-item {
-            border: none;
-            background-color: #343a40;
-        }
-
-        .accordion-button {
-            background-color: #343a40;
-            color: white;
-            padding: 1rem 1.25rem;
-        }
-
-        .accordion-button:not(.collapsed) {
-            background-color: #2c3136;
-            color: white;
-            box-shadow: none;
-        }
-
-        .accordion-button::after {
-            filter: brightness(0) invert(1);
-        }
-
-        .accordion-body {
-            background-color: #2c3136;
-            padding: 0;
-        }
-
-        .list-group-item {
-            background-color: transparent;
-            border: none;
-            color: #adb5bd;
-            padding: 0.75rem 2.5rem;
-            transition: all 0.3s;
-        }
-
-        .list-group-item:hover {
-            background-color: #404850;
-            color: white;
-        }
-
-        .alert-floating {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1050;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+        .content {
+            padding: 20px;
+            margin-bottom: 60px;
         }
     </style>
 </head>
 <body>
-
-<!-- Success/Error Alert -->
-<div th:if="${success}" class="alert alert-success alert-floating alert-dismissible fade show" role="alert">
-    <span th:text="${success}"></span>
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-</div>
-<div th:if="${error}" class="alert alert-danger alert-floating alert-dismissible fade show" role="alert">
-    <span th:text="${error}"></span>
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-</div>
-
-<!-- Top Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+<!-- Navbar -->
+<nav class="navbar navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <i class="fas fa-shield-alt me-2"></i>Admin Panel
-        </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#topNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="topNavbar">
-            <ul class="navbar-nav ms-auto">
-                <!-- Profile Dropdown -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown">
-                        <img th:src="${profilePicture != null} ? ${profilePicture} : '/images/default-profile.png'"
-                             alt="Profile" class="profile-picture me-2">
-                        <span th:text="${userName}">Admin Name</span>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-end">
-                        <!-- Profile Picture Upload Form -->
-                        <form th:action="@{/upload-profile-picture}" method="post" enctype="multipart/form-data" class="px-3 py-2">
-                            <div class="mb-2">
-                                <input type="file" name="profilePicture" class="form-control form-control-sm" accept="image/*" required>
-                            </div>
-                            <button type="submit" class="btn btn-primary btn-sm w-100">Upload Picture</button>
-                        </form>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" th:href="@{/change-password}">
-                            <i class="fas fa-key me-2"></i>Change Password
-                        </a>
-                        <a class="dropdown-item text-danger" th:href="@{/logout}">
-                            <i class="fas fa-sign-out-alt me-2"></i>Logout
-                        </a>
-                    </div>
-                </li>
+        <a class="navbar-brand"><i class="fas fa-shield-alt me-2"></i>Admin Panel</a>
+        <div class="dropdown">
+            <button class="btn btn-dark dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
+                <img th:src="${profilePicture}" class="rounded-circle me-2" style="width: 32px; height: 32px;" alt="Profile">
+                <span th:text="${userName}">Admin</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
+                <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
             </ul>
         </div>
     </div>
@@ -189,7 +492,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <!-- Left Sidebar -->
+        <!-- Sidebar with Accordion -->
         <div class="col-md-3 col-lg-2 sidebar p-0">
             <div class="accordion" id="sidebarAccordion">
                 <!-- Users Management -->
@@ -259,136 +562,100 @@
 
         <!-- Main Content -->
         <div class="col-md-9 col-lg-10 content">
-            <!-- Content will be dynamically loaded here -->
-            <div class="col-md-9 col-lg-10 content">
-                <div class="container-fluid">
-                    <!-- Welcome Message -->
-                    <div class="row mb-4">
-                        <div class="col">
-                            <h2>Welcome Back, <span th:text="${userName}">Admin</span>!</h2>
-                            <p class="text-muted">Here's what's happening with your platform today.</p>
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card stat-card bg-primary text-white">
+                        <div class="card-body">
+                            <h5><i class="fas fa-users me-2"></i>Total Users</h5>
+                            <h3 th:text="${totalUsers ?: '13'}">12</h3>
                         </div>
                     </div>
-
-                    <!-- Dashboard Cards -->
-                    <div class="row g-4 mb-4">
-                        <!-- Total Users Card -->
-                        <div class="col-12 col-sm-6 col-xl-3">
-                            <div class="dashboard-card p-3">
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon me-3">
-                                        <i class="fas fa-users"></i>
-                                    </div>
-                                    <div>
-                                        <div class="stat-number" th:text="${totalUsers ?: '2,459'}">2,459</div>
-                                        <div class="stat-label">Total Users</div>
-                                    </div>
-                                </div>
-                            </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card bg-success text-white">
+                        <div class="card-body">
+                            <h5><i class="fas fa-building me-2"></i>Institutions</h5>
+                            <h3 th:text="${totalInstitutions ?: '1'}">0</h3>
                         </div>
-
-                        <!-- Total Institutions Card -->
-                        <div class="col-12 col-sm-6 col-xl-3">
-                            <div class="dashboard-card p-3">
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon me-3">
-                                        <i class="fas fa-building"></i>
-                                    </div>
-                                    <div>
-                                        <div class="stat-number" th:text="${totalInstitutions ?: '156'}">156</div>
-                                        <div class="stat-label">Institutions</div>
-                                    </div>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card bg-info text-white">
+                        <div class="card-body">
+                            <h5><i class="fas fa-box me-2"></i>Products</h5>
+                            <h3 th:text="${activeProducts ?: '0'}">0</h3>
                         </div>
-
-                        <!-- Active Products Card -->
-                        <div class="col-12 col-sm-6 col-xl-3">
-                            <div class="dashboard-card p-3">
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon me-3">
-                                        <i class="fas fa-box"></i>
-                                    </div>
-                                    <div>
-                                        <div class="stat-number" th:text="${activeProducts ?: '847'}">847</div>
-                                        <div class="stat-label">Active Products</div>
-                                    </div>
-                                </div>
-                            </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card stat-card bg-warning text-white">
+                        <div class="card-body">
+                            <h5><i class="fas fa-chart-line me-2"></i>Revenue</h5>
+                            <h3 th:text="${monthlyRevenue ?: '$1K'}">$1K</h3>
                         </div>
+                    </div>
+                </div>
+            </div>
 
-                        <!-- Monthly Revenue Card -->
-                        <div class="col-12 col-sm-6 col-xl-3">
-                            <div class="dashboard-card p-3">
-                                <div class="d-flex align-items-center">
-                                    <div class="card-icon me-3">
-                                        <i class="fas fa-chart-line"></i>
-                                    </div>
-                                    <div>
-                                        <div class="stat-number" th:text="${monthlyRevenue ?: '$52K'}">$52K</div>
-                                        <div class="stat-label">Monthly Revenue</div>
-                                    </div>
-                                </div>
+            <!-- Charts -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Revenue Trends</h5>
+                            <div class="chart-container">
+                                <canvas id="revenueChart"></canvas>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Recent Activity Section -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="dashboard-card p-4">
-                                <h4 class="mb-4">Recent Activity</h4>
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                        <tr>
-                                            <th>User</th>
-                                            <th>Action</th>
-                                            <th>Date</th>
-                                            <th>Status</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <tr>
-                                            <td>John Doe</td>
-                                            <td>New Registration</td>
-                                            <td>2024-02-15</td>
-                                            <td><span class="badge bg-success">Completed</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Jane Smith</td>
-                                            <td>Product Update</td>
-                                            <td>2024-02-14</td>
-                                            <td><span class="badge bg-primary">In Progress</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Mike Johnson</td>
-                                            <td>Institution Added</td>
-                                            <td>2024-02-13</td>
-                                            <td><span class="badge bg-success">Completed</span></td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <div class="mt-3">
-                                        <button class="btn btn-success me-2" onclick="exportToExcel()">
-                                            <i class="fas fa-file-excel me-2"></i>Export to Excel
-                                        </button>
-                                        <button class="btn btn-danger" onclick="exportToPDF()">
-                                            <i class="fas fa-file-pdf me-2"></i>Export to PDF
-                                        </button>
-                                    </div>
-
-                                </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">User Growth</h5>
+                            <div class="chart-container">
+                                <canvas id="usersChart"></canvas>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity Table -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Recent Activity</h5>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="activity : ${recentActivities}">
+                                <td th:text="${activity.user}">John Doe</td>
+                                <td th:text="${activity.action}">New Registration</td>
+                                <td th:text="${activity.date}">2024-02-15</td>
+                                <td>
+                                            <span th:text="${activity.status}"
+                                                  th:class="${activity.status == 'Completed' ? 'badge bg-success' : 'badge bg-primary'}">
+                                                Completed
+                                            </span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 
 <!-- Footer -->
 <footer class="footer text-center">
@@ -397,5 +664,41 @@
     </div>
 </footer>
 
+<script>
+    // Revenue Chart
+    new Chart(document.getElementById('revenueChart'), {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Revenue ($K)',
+                data: [42, 45, 48, 52, 55, 58],
+                borderColor: '#0d6efd',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    // Users Chart
+    new Chart(document.getElementById('usersChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'New Users',
+                data: [120, 150, 180, 190, 210, 250],
+                backgroundColor: '#198754'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+</script>
 </body>
 </html>

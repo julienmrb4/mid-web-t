@@ -184,6 +184,208 @@
     <!-- Main Content -->
     <div class="col-md-9 col-lg-10 content">
       <!-- Content will be dynamically loaded here -->
+      <!-- Summary Cards Row -->
+      <div class="container-fluid">
+        <!-- Stats Cards -->
+        <div class="row mb-4">
+          <div class="col-md-3">
+            <div class="card bg-primary text-white">
+              <div class="card-body">
+                <h5 class="card-title">Total Revenue</h5>
+                <h2 class="mb-0">$2.4M</h2>
+                <small>This Quarter</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card bg-success text-white">
+              <div class="card-body">
+                <h5 class="card-title">Tax Returns</h5>
+                <h2 class="mb-0">4,586</h2>
+                <small>Processed This Month</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card bg-warning text-dark">
+              <div class="card-body">
+                <h5 class="card-title">Pending Reviews</h5>
+                <h2 class="mb-0">238</h2>
+                <small>Awaiting Processing</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card bg-info text-white">
+              <div class="card-body">
+                <h5 class="card-title">Compliance Rate</h5>
+                <h2 class="mb-0">94.2%</h2>
+                <small>Current Period</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tax Registration Form and Activity Monitor -->
+        <div class="row">
+          <!-- Tax Registration Form -->
+          <div class="col-md-6 mb-4">
+            <div class="card">
+              <div class="card-header bg-dark text-white">
+                <h5 class="card-title mb-0">Quick Tax Registration</h5>
+              </div>
+              <div class="card-body">
+                <form>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label class="form-label">Business Name</label>
+                      <input type="text" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Tax ID</label>
+                      <input type="text" class="form-control">
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Business Type</label>
+                    <select class="form-select">
+                      <option>Select Type</option>
+                      <option>Sole Proprietorship</option>
+                      <option>Corporation</option>
+                      <option>Partnership</option>
+                      <option>LLC</option>
+                    </select>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label class="form-label">Annual Revenue</label>
+                      <input type="number" class="form-control">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Tax Category</label>
+                      <select class="form-select">
+                        <option>Standard Rate</option>
+                        <option>Small Business</option>
+                        <option>Enterprise</option>
+                      </select>
+                    </div>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Register Business</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="col-md-6 mb-4">
+            <div class="card">
+              <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Recent Activities</h5>
+                <div class="btn-group btn-group-sm">
+                  <button class="btn btn-outline-light active">All</button>
+                  <button class="btn btn-outline-light">Returns</button>
+                  <button class="btn btn-outline-light">Payments</button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="list-group list-group-flush">
+                  <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6 class="mb-0">Tax Return Processed</h6>
+                      <small class="text-muted">ID: 2024-TR-4586</small>
+                      <small class="text-muted d-block">2 hours ago</small>
+                    </div>
+                    <span class="badge bg-success">Completed</span>
+                  </div>
+                  <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6 class="mb-0">Payment Received</h6>
+                      <small class="text-muted">$24,500 - ID: PAY-8867</small>
+                      <small class="text-muted d-block">3 hours ago</small>
+                    </div>
+                    <span class="badge bg-info">Payment</span>
+                  </div>
+                  <div class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                      <h6 class="mb-0">Review Required</h6>
+                      <small class="text-muted">Documentation Issue - ID: REV-2345</small>
+                      <small class="text-muted d-block">5 hours ago</small>
+                    </div>
+                    <span class="badge bg-warning">Pending</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tax Returns Overview Table -->
+        <div class="row">
+          <div class="col-12 mb-4">
+            <div class="card">
+              <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Recent Tax Returns</h5>
+                <div class="input-group w-25">
+                  <input type="text" class="form-control form-control-sm" placeholder="Search by ID...">
+                  <button class="btn btn-outline-light btn-sm"><i class="fas fa-search"></i></button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                    <tr>
+                      <th>Return ID</th>
+                      <th>Business Name</th>
+                      <th>Type</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <td>TR-2024-001</td>
+                      <td>Tech Solutions Inc.</td>
+                      <td>Corporation</td>
+                      <td>$45,200</td>
+                      <td><span class="badge bg-success">Processed</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                        <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-print"></i></button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>TR-2024-002</td>
+                      <td>Green Foods LLC</td>
+                      <td>LLC</td>
+                      <td>$28,750</td>
+                      <td><span class="badge bg-warning">Under Review</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                        <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-print"></i></button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>TR-2024-003</td>
+                      <td>Smith Consulting</td>
+                      <td>Sole Proprietorship</td>
+                      <td>$12,800</td>
+                      <td><span class="badge bg-info">In Progress</span></td>
+                      <td>
+                        <button class="btn btn-sm btn-outline-primary"><i class="fas fa-eye"></i></button>
+                        <button class="btn btn-sm btn-outline-secondary"><i class="fas fa-print"></i></button>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
